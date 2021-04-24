@@ -1,0 +1,2 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<con:testSuite id="95317e51-7c29-49dc-81e3-51871d405602" name="Practice-TestSuite" xmlns:con="http://eviware.com/soapui/config"><con:settings><con:setting id="95317e51-7c29-49dc-81e3-51871d405602fileName">Practice-TestSuite</con:setting></con:settings><con:runType>SEQUENTIAL</con:runType><con:properties/><con:reportParameters/></con:testSuite>

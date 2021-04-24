@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<con:testCase id="6e8959ae-278e-4d1f-ba64-eb53893fc09a" failOnError="true" failTestCaseOnErrors="true" keepSession="false" maxResults="0" name="ReadingDataFromExcel" searchProperties="true" xmlns:con="http://eviware.com/soapui/config"><con:settings><con:setting id="6e8959ae-278e-4d1f-ba64-eb53893fc09afileName">ReadingDataFromExcel</con:setting></con:settings><con:testStep type="request" name="ReadingDataFromExcel-TestStep" id="b43e8662-8836-461c-869b-29059d05df03"><con:settings/><con:config xsi:type="con:RequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:interface>EmployeeManagementServiceSoap12Binding</con:interface><con:operation>getEmployeeDetails</con:operation><con:request name="ReadingDataFromExcel-TestStep" id="5eb2d526-ccf3-411a-8020-b364cbca6a8c"><con:settings/><con:encoding>UTF-8</con:encoding><con:endpoint>http://localhost:8080/axis2/services/EmployeeManagementService.EmployeeManagementServiceHttpSoap12Endpoint/</con:endpoint><con:request><![CDATA[<soap:Envelope xmlns:soap="http://www.w3.org/2003/05/soap-envelope" xmlns:typ="http://sample.com/reservation/guest/types">\r
+   <soap:Header/>\r
+   <soap:Body>\r
+      <typ:getEmployeeDetails>\r
+         <!--Optional:-->\r
+         <typ:employeeName>?</typ:employeeName>\r
+      </typ:getEmployeeDetails>\r
+   </soap:Body>\r
+</soap:Envelope>]]></con:request><con:assertion type="SOAP Response" id="23fc7e85-9dcc-403c-ba22-ae9816838a21"/><con:assertion type="Schema Compliance" id="79c8547b-7943-493e-a770-1bd28f90c0c9"><con:configuration/></con:assertion><con:assertion type="SOAP Fault Assertion" id="fa1ea3a2-9497-4218-9f3b-deec4c1f6af7"/><con:credentials><con:selectedAuthProfile>No Authorization</con:selectedAuthProfile><con:authType>No Authorization</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:wsaConfig mustUnderstand="NONE" version="200508"/><con:wsrmConfig version="1.2"/></con:request></con:config></con:testStep><con:testStep type="groovy" name="Groovy Script" id="4618d094-66b7-490e-baed-1c831f49d4c5"><con:settings/><con:config><script>import jxl.*
+
+//create file instance
+def excelFilePath="F:\\SoapUI\\TestData\\GetEmployee1.xls"
+
+File excelfile= new File(excelFilePath)
+
+//create excel instance
+
+Workbook workbook= Workbook.getWorkbook(excelfile)
+
+//load the sheet
+
+Sheet sheet=workbook.getSheet(0)
+
+//Read the data from excel
+
+int noOfRows= sheet.getRows()-1
+
+log.info noOfRows
+
+for(int rowIdx in 1..noOfRows)
+	log.info sheet.getCell(0,rowIdx).getContents()
+workbook.close()</script></con:config></con:testStep><con:properties/><con:reportParameters/></con:testCase>

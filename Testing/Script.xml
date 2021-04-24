@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<con:testCase id="0b03f028-1733-4feb-838f-a6eaf2e91dfd" failOnError="true" failTestCaseOnErrors="true" keepSession="false" maxResults="0" name="Script" searchProperties="true" xmlns:con="http://eviware.com/soapui/config"><con:settings><con:setting id="0b03f028-1733-4feb-838f-a6eaf2e91dfdfileName">Script</con:setting></con:settings><con:testStep type="groovy" name="Groovy Script" id="82846458-8542-41ea-9285-9c9c0530f8c2"><con:settings/><con:config><script>log.info "Hello"
+
+log.info context.expand('${#TestCase#name}')
+log.info context.expand ('${#TestCase#age}')
+
+// log.info testRunner.testCase.testSuite.testCases["addEmployee"].getPropertyValue("id")
+// log.info testRunner.testCase.testSuite.testCases["getEmployee"].getPropertyValue("id")
+
+testRunner.testCase.testSuite.testCases["addEmployee"].setPropertyValue("id", "9912")
+testRunner.testCase.testSuite.testCases["addEmployee"].setPropertyValue("name", "Ramu two")
+testRunner.testCase.testSuite.testCases["addEmployee"].setPropertyValue("Department", "Finance")
+testRunner.testCase.testSuite.testCases["addEmployee"].setPropertyValue("age", "22")
+
+log.info testRunner.testCase.testSuite.testCases["addEmployee"].getPropertyValue("id")
+log.info testRunner.testCase.testSuite.testCases["addEmployee"].getPropertyValue("name")
+
+
+log.info testRunner.testCase.testSuite.testCases["getEmployee"].testSteps["getEmployeeSteps"].getPropertyValue("Request")
+
+log.info testRunner.testCase.testSuite.project.getPropertyValue("Gender")
+
+</script></con:config></con:testStep><con:testStep type="groovy" name="CallingXMLScript" id="0d1679aa-97cb-4993-a168-48d3dabde7fc"><con:settings/><con:config><script>import com.eviware.soapui.support.XmlHolder
+import com.eviware.soapui.impl.wsdl.testcase.WsdlTestRunContext
+
+def addRequest=testRunner.testCase.testSuite.testCases["addEmployeeFromXML"].testSteps["addEmp"].getPropertyValue("Request")
+log.info addRequest
+def empId=testRunner.testCase.testSuite.testCases["addEmployeeFromXML"].getPropertyValue("id")
+def empName=testRunner.testCase.testSuite.testCases["addEmployeeFromXML"].getPropertyValue("name")
+def empDept=testRunner.testCase.testSuite.testCases["addEmployeeFromXML"].getPropertyValue("Department")
+def empAge=testRunner.testCase.testSuite.testCases["addEmployeeFromXML"].getPropertyValue("age")
+
+def addEmpDetails= new XmlHolder(addRequest)
+addEmpDetails.setNodeValue("//typ:addEmployee/typ:name", empName)
+
+addEmpDetails.setNodeValue("//typ:addEmployee/typ:id",empId)
+addEmpDetails.setNodeValue("//typ:addEmployee/typ:Department",empDept)
+addEmpDetails.setNodeValue("//typ:addEmployee/typ:age",empAge)
+
+def newAddXml = addEmpDetails.getXml();
+testRunner.testCase.testSuite.testCases["addEmployeeFromXML"].testSteps["addEmp"].setPropertyValue("Request",newAddXml)
+
+def addTestStep=testRunner.testCase.testSuite.testCases["addEmployeeFromXML"].testSteps["addEmp"]
+
+def contextAddEmployee=new WsdlTestRunContext(addTestStep);
+
+addTestStep.run(testRunner,contextAddEmployee)
+//testRunner.testCase.testSuite.testCases["addEmployee"].setPropertyValue("id", "9919")
+//testRunner.testCase.testSuite.testCases["addEmployee"].setPropertyValue("name", "Ramu")
+//testRunner.testCase.testSuite.testCases["addEmployee"].setPropertyValue("Department", "Finance")
+//testRunner.testCase.testSuite.testCases["addEmployee"].setPropertyValue("age", "22")</script></con:config></con:testStep><con:testStep type="groovy" name="ReadingCSV" id="439deb85-48e5-4579-aa76-1cf76ada7149" disabled="true"><con:settings/><con:config><script>def groovyUtils = new com.eviware.soapui.support.GroovyUtils(context)
+
+//get the csv test file with 
+def csvFilePath = "F:\\SoapUI\\TestData\\EmpData.csv"
+context.fileReader = new BufferedReader(new FileReader(csvFilePath))
+
+//parse the csv file line by line
+rowsData = context.fileReader.readLines()
+int rowsize = rowsData.size()
+for(int i = 1;  i &lt; rowsize;  i++)
+{
+
+    rowdata = rowsData[i]
+    String[] data = rowdata.split(",")
+
+    //get the values from records
+    def value_from_first_column = data[0]	
+    log.info "first column ->"+value_from_first_column
+    //def value_from_second_column = data[1]
+    //def value_from_third_column = data[2]
+
+//def addRequest=testRunner.testCase.testSuite.testCases["getEmployeeFromCSV"].testSteps["getEmp"].getPropertyValue("Request")
+testRunner.testCase.testSuite.testCases["getEmployeeFromCSV"].testSteps["getEmp"].setPropertyValue("Username",value_from_first_column)
+testRunner.testCase.testSuite.testCases["getEmployeeFromCSV"].setPropertyValue("name",value_from_first_column)
+//log.info "after execution ->"+ testRunner.testCase.testSuite.testCases["getEmployeeFromCSV"].testSteps["getEmp"].getPropertyValue("Request")
+
+def getObj = testRunner.testCase.testSuite.testCases["getEmployeeFromCSV"].testSteps["getEmp"].getTestStepByName("Username")
+testRunner.runTestStepByName(getObj)
+// EXECUTE REQUEST FOR EACH VALUE IN CSV
+  testRunner.testCase.testSuite.testCases["getEmployeeFromCSV"].runTestStepByName("HTTP Request test step name")  
+   //timeout between iterations
+   sleep(500)
+}</script></con:config></con:testStep><con:properties><con:property><con:name>name</con:name><con:value>one</con:value></con:property><con:property><con:name>age</con:name><con:value>39</con:value></con:property></con:properties><con:reportParameters/></con:testCase>

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<con:testCase id="c52b2afc-be2b-454b-8da3-df5da5ecb1e0" failOnError="true" failTestCaseOnErrors="true" keepSession="false" maxResults="0" name="ImportJarFile" searchProperties="true" xmlns:con="http://eviware.com/soapui/config"><con:settings><con:setting id="c52b2afc-be2b-454b-8da3-df5da5ecb1e0fileName">ImportJarFile</con:setting></con:settings><con:testStep type="groovy" name="ImportJarScript" id="c9e008b7-4580-48bc-abf3-f86d48f2cc9d"><con:settings/><con:config><script>import com.java.examples.CustomCalculator
+import com.java.examples.json.customjsonvalidation.CustomJsonSchemaValidator
+
+CustomCalculator cc= new CustomCalculator();
+def c = cc.addition(2,3)
+
+def d = cc.substraction(2,3)
+
+def e = cc.multiplication(2,3)
+log.info c
+log.info d
+log.info e
+
+
+//JsonSchemaValidation data= new JsonSchemaValidation();
+//		boolean ret=data.validateJsonDocument("F:\\SoapUI\\Schema\\contact.json","F:\\SoapUI\\Schema\\contactPayload.json");
+//		log.info "is it json schema valid->"+ret
+
+	CustomJsonSchemaValidator schemadata= new CustomJsonSchemaValidator();
+    	
+    	def result = schemadata.validationJsonSchema("F:\\SoapUI\\Schema\\example.json", "F:\\SoapUI\\Schema\\example-schema.json");	
+
+    	log.info "final result ->"+result</script></con:config></con:testStep><con:properties/><con:reportParameters/></con:testCase>

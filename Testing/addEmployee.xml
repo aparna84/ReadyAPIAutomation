@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<con:testCase id="ba17635e-ca04-4810-a3b4-a4b791e6c8f1" failOnError="true" failTestCaseOnErrors="true" keepSession="false" maxResults="0" name="addEmployee" searchProperties="true" xmlns:con="http://eviware.com/soapui/config"><con:settings><con:setting id="ba17635e-ca04-4810-a3b4-a4b791e6c8f1fileName">addEmployee</con:setting></con:settings><con:testStep type="request" name="addEmployee" id="5e3d62f7-da49-4778-a70e-b77c4a13e915"><con:settings/><con:config xsi:type="con:RequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:interface>EmployeeManagementServiceSoap12Binding</con:interface><con:operation>addEmployee</con:operation><con:request name="addEmployee" id="7685cee4-468c-4b27-b9f1-c9e09dc3b95a"><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting></con:settings><con:encoding>UTF-8</con:encoding><con:endpoint>http://localhost:8080/axis2/services/EmployeeManagementService.EmployeeManagementServiceHttpSoap12Endpoint/</con:endpoint><con:request><![CDATA[<soap:Envelope xmlns:soap="http://www.w3.org/2003/05/soap-envelope" xmlns:typ="http://sample.com/reservation/guest/types">\r
+   <soap:Header/>\r
+   <soap:Body>\r
+      <typ:addEmployee>\r
+         <!--Optional:-->\r
+         <typ:name>${#TestCase#name}</typ:name>\r
+         <!--Optional:-->\r
+         <typ:id>${#TestCase#id}</typ:id>\r
+         <!--Optional:-->\r
+         <typ:Department>${#TestCase#Department}</typ:Department>\r
+         <!--Optional:-->\r
+         <typ:age>${#TestCase#age}</typ:age>\r
+      </typ:addEmployee>\r
+   </soap:Body>\r
+</soap:Envelope>]]></con:request><con:assertion type="SOAP Response" id="da1d32d1-9cf1-49aa-bf73-b96c9bd82c1c"/><con:credentials><con:selectedAuthProfile>No Authorization</con:selectedAuthProfile><con:authType>No Authorization</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:wsaConfig mustUnderstand="NONE" version="200508"/><con:wsrmConfig version="1.2"/></con:request></con:config></con:testStep><con:properties><con:property><con:name>id</con:name><con:value>9912</con:value></con:property><con:property><con:name>Department</con:name><con:value>Finance</con:value></con:property><con:property><con:name>age</con:name><con:value>22</con:value></con:property><con:property><con:name>name</con:name><con:value>Ramu two</con:value></con:property></con:properties><con:reportParameters/></con:testCase>

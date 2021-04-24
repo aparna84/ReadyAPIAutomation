@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<con:testCase id="2320fe4e-54a5-4574-b9fb-57875d217af6" failOnError="true" failTestCaseOnErrors="true" keepSession="false" maxResults="0" name="BasicTestCases" searchProperties="true" xmlns:con="http://eviware.com/soapui/config"><con:settings><con:setting id="2320fe4e-54a5-4574-b9fb-57875d217af6fileName">BasicTestCases</con:setting></con:settings><con:testStep type="groovy" name="Groovy Script" id="6fd39b6d-ddf4-4954-ae86-b6fe6fe642e1"><con:settings/><con:config><script>def x = 104
+log.info x.getClass()
+x = "Guru99"
+log.info x.getClass()
+
+def name=""" This is 
+sample
+test """
+
+log.info name
+// looing $it is a closure that gives the value of the current loop.
+
+0.upto (4) {log. info "$it"}
+
+//"times" keyword
+5.times{log. info "$it"}
+
+//step method
+0.step(7,2){log. info "$it"}</script></con:config></con:testStep><con:testStep type="groovy" name="List" id="af55ccdc-0c2d-492a-b562-121a3c5229a9"><con:settings/><con:config><script>/* add() Allows you to append the new value to the end of this List.
+
+contains() Returns true if this List contains a certain value.
+
+get() Returns the element at the definite position
+
+isEmpty() Returns true value if List contains no elements
+
+minus() This command allows you to create a new List composed of the elements of the original excluding those which are specified in the collection.
+
+plus() Allows you to create a new List composed of the elements of the original together along with mentioned in the collection.
+
+pop() Removes the last item from the List
+
+remove() Removes the element at the specific position
+
+reverse() Create a new List which reverses the elements of the original List
+
+size() Allow finding some elements
+
+sort() Returns a sorted copy 
+*/
+
+def y=["This", "is", "Practice", "Time"]
+
+log.info y
+log.info y.contains("is")
+log.info y.contains("new")
+y.add("for")
+log.info y
+log.info y.get(2)
+log.info y.isEmpty()
+
+List z=y.minus("for")
+log.info z
+
+List z1=y.plus("Groovy")
+log.info z1
+
+z1.pop()
+log.info z1
+
+log.info z1.reverse()
+
+log.info z1.sort()</script></con:config></con:testStep><con:testStep type="groovy" name="Maps" id="62aa0086-1a55-420d-96d7-a22ea5d02eca"><con:settings/><con:config><script>/*
+ containsKey() Check that map contains this key or not?
+
+get() This command looks up the key in this Map and returns the corresponding value. If you don't find any entry in this Map, then it will return null.
+
+keySet() Allows to find a set of the keys in this Map
+
+put() Associates the specified value with the given key in this Map. If the Map earlier contained a mapping for this key. Then the old value will be replaced by the specified value.
+
+size() Returns the number of key-value mappings.
+
+values() This command returns a collection view of the values.
+ */
+
+ def y = [fName:'Jen', lName:'Cruise', sex:'F']
+log.info y.get("fName")
+
+log.info y.containsKey("sex")
+log.info y.keySet()
+
+y.put("fName","john")
+log.info y.get("fName")
+
+log.info y.size()
+
+log.info y.values()
+
+</script></con:config></con:testStep><con:testStep type="groovy" name="Files" id="c761a008-64ae-4fc5-869c-0957ef19ab1a"><con:settings/><con:config><script>@Grab(group = 'net.sf.opencsv', module = 'opencsv', version = '2.3')
+import au.com.bytecode.opencsv.CSVReader
+import au.com.bytecode.opencsv.CSVParser
+import au.com.bytecode.opencsv.CSVWriter
+import com.eviware.soapui.support.GroovyUtils
+import com.eviware.soapui.impl.wsdl.testcase.WsdlTestRunContext
+import java.util.*
+import java.io.InputStreamReader
+import java.io.BufferedReader
+import com.eviware.soapui.support.XmlHolder 
+def filePath="F:\\SoapUI\\query.txt"
+
+File file= new File(filePath)
+
+file.eachLine{line->log.info "line: $line"}
+file.text
+
+//File with reader
+noOfLines=0
+file.withReader{reader->
+	while((line=reader.readLine())!=null)
+	{
+		log.info "$line"
+		noOfLines++
+	}
+	}
+	//return noOfLines
+
+// With fileInputStream
+
+File file2= new File(filePath).newInputStream(){
+	file2.eachLine{line2->
+	log.info line2
+
+}
+	}
+</script></con:config></con:testStep><con:testStep type="groovy" name="misc1" id="c142178d-3969-48f0-bbe5-96ca77e98164"><con:settings/><con:config><script>      try {
+         def arr = new int[3];
+         arr[5] = 5;
+      } catch(Exception ex) {
+         log.info ("Catching the exception")
+      }
+		
+      log. info ("Let's move on after the exception")
+
+</script></con:config></con:testStep><con:testStep type="groovy" name="Method" id="904fd504-2d3c-43df-a1b6-eac88b28ccd5"><con:settings/><con:config><script>def 'should return no of lines in givven file' ()
+{
+	def filePath="F:\\SoapUI\\query.txt"
+	def noOfLines=readFile.readFileLineByLine(filePath)
+	given: 
+}
+</script></con:config></con:testStep><con:properties/><con:reportParameters/></con:testCase>
