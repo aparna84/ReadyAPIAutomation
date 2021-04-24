@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<con:testCase id="af1584ef-ed38-43dc-90d5-dc0ce9665eb4" failOnError="true" failTestCaseOnErrors="true" keepSession="false" maxResults="0" name="addEmployeeFromXML" searchProperties="true" xmlns:con="http://eviware.com/soapui/config"><con:settings><con:setting id="af1584ef-ed38-43dc-90d5-dc0ce9665eb4fileName">addEmployeeFromXML</con:setting></con:settings><con:testStep type="request" name="addEmp" id="bd71c5cc-e5b5-4fef-9ab1-8594f534b7e9"><con:settings/><con:config xsi:type="con:RequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:interface>EmployeeManagementServiceSoap12Binding</con:interface><con:operation>addEmployee</con:operation><con:request name="addEmp" id="78adb09a-9c2d-4e93-852a-c2622a32840c"><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting></con:settings><con:encoding>UTF-8</con:encoding><con:endpoint>http://localhost:8080/axis2/services/EmployeeManagementService.EmployeeManagementServiceHttpSoap12Endpoint/</con:endpoint><con:request><![CDATA[<soap:Envelope xmlns:soap="http://www.w3.org/2003/05/soap-envelope" xmlns:typ="http://sample.com/reservation/guest/types">
+   <soap:Header/>
+   <soap:Body>
+      <typ:addEmployee>
+         <!--Optional:-->
+         <typ:name>XML root2</typ:name>
+         <!--Optional:-->
+         <typ:id>456</typ:id>
+         <!--Optional:-->
+         <typ:Department>IT</typ:Department>
+         <!--Optional:-->
+         <typ:age>12</typ:age>
+      </typ:addEmployee>
+   </soap:Body>
+</soap:Envelope>]]></con:request><con:assertion type="SOAP Response" id="edd193f4-7022-4418-b9e1-682a0d5852e5"/><con:credentials><con:selectedAuthProfile>No Authorization</con:selectedAuthProfile><con:authType>No Authorization</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:wsaConfig mustUnderstand="NONE" version="200508"/><con:wsrmConfig version="1.2"/></con:request></con:config></con:testStep><con:properties><con:property><con:name>name</con:name><con:value>XML root2</con:value></con:property><con:property><con:name>Department</con:name><con:value>IT</con:value></con:property><con:property><con:name>age</con:name><con:value>12</con:value></con:property><con:property><con:name>id</con:name><con:value>456</con:value></con:property></con:properties><con:reportParameters/></con:testCase>

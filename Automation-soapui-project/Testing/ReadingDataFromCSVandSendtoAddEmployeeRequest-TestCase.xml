@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<con:testCase id="a4966bbf-2e7f-4db2-a2c7-41cfd1404898" failOnError="true" failTestCaseOnErrors="true" keepSession="false" maxResults="0" name="ReadingDataFromCSVandSendtoAddEmployeeRequest-TestCase" searchProperties="true" xmlns:con="http://eviware.com/soapui/config"><con:settings><con:setting id="a4966bbf-2e7f-4db2-a2c7-41cfd1404898fileName">ReadingDataFromCSVandSendtoAddEmployeeRequest-TestCase</con:setting></con:settings><con:testStep type="request" name="addEmployee-TestStep" id="a86df7da-d356-476e-aed4-257046a8695a"><con:settings/><con:config xsi:type="con:RequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:interface>EmployeeManagementServiceSoap12Binding</con:interface><con:operation>addEmployee</con:operation><con:request name="addEmployee-TestStep" id="3cc26b3e-d580-468a-9a8f-9231bb37b920"><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting></con:settings><con:encoding>UTF-8</con:encoding><con:endpoint>http://localhost:8080/axis2/services/EmployeeManagementService.EmployeeManagementServiceHttpSoap12Endpoint/</con:endpoint><con:request><![CDATA[<soap:Envelope xmlns:soap="http://www.w3.org/2003/05/soap-envelope" xmlns:typ="http://sample.com/reservation/guest/types">\r
+   <soap:Header/>\r
+   <soap:Body>\r
+      <typ:addEmployee>\r
+         <!--Optional:-->\r
+         <typ:name>${#TestCase#name}</typ:name>\r
+         <!--Optional:-->\r
+         <typ:id>${#TestCase#id}</typ:id>\r
+         <!--Optional:-->\r
+         <typ:Department>${#TestCase#Department}</typ:Department>\r
+         <!--Optional:-->\r
+         <typ:age>${#TestCase#age}</typ:age>\r
+      </typ:addEmployee>\r
+   </soap:Body>\r
+</soap:Envelope>]]></con:request><con:assertion type="SOAP Response" id="da5b7cb1-d92a-4e27-8687-aaf8ee2a9978"/><con:assertion type="Schema Compliance" id="177755ef-a684-44d9-b291-51d9fb4c3147"><con:configuration/></con:assertion><con:assertion type="SOAP Fault Assertion" id="2c6ca658-9586-4fb3-a4c1-6e8ee1328354"/><con:credentials><con:selectedAuthProfile>No Authorization</con:selectedAuthProfile><con:authType>No Authorization</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:wsaConfig mustUnderstand="NONE" version="200508"/><con:wsrmConfig version="1.2"/></con:request></con:config></con:testStep><con:testStep type="groovy" name="Groovy Script for Delimiter2" id="07278dac-fd13-40e9-8469-27a54ac7e592"><con:settings/><con:config><script>@Grab(group = 'net.sf.opencsv', module = 'opencsv', version = '2.3')
+import au.com.bytecode.opencsv.CSVReader
+import au.com.bytecode.opencsv.CSVParser
+import au.com.bytecode.opencsv.CSVWriter
+
+import com.eviware.soapui.support.GroovyUtils
+import com.eviware.soapui.impl.wsdl.testcase.WsdlTestRunContext
+import java.util.*
+import com.eviware.soapui.support.XmlHolder
+
+
+def TEST_FILE_NAME = 'F:\\SoapUI\\TestData\\EmpData2.csv'
+def TEST_OUTPUT_FILE_NAME = 'F:\\SoapUI\\TestData\\EmpDataOutput.csv'
+
+List&lt;String[]> rows = new CSVReader(new FileReader(new File(TEST_FILE_NAME)), CSVParser.DEFAULT_SEPARATOR, CSVParser.DEFAULT_ESCAPE_CHARACTER, CSVParser.DEFAULT_QUOTE_CHARACTER, 1).readAll()
+log.info "This is row data"+rows
+
+	log.info "single obj ->"+rows[0][0]
+	log.info "single obj ->"+rows[1][0]
+	log.info "single obj ->"+rows[2][0]
+	log.info "single obj ->"+rows[3][0]
+	for(int i=0;i&lt;rows.size();i++)
+	{
+			log.info "This is i loop"+i
+
+			ArrayList list = rows[i][0].split("\\|")
+			log.info "list first ->"+list[0]
+			def nameFromCSV=list[0]
+			log.info "This is name assigned to nameFromCSV "+nameFromCSV
+			log.info "list second ->"+list[1]
+			def ageFromCSV=list[1]
+			log.info "list second ->"+list[2]
+			def departmentFromCSV=list[2]
+			log.info "list second ->"+list[3]
+			def idFromCSV=list[3]
+testRunner.testCase.setPropertyValue("name",nameFromCSV)
+testRunner.testCase.setPropertyValue("age",ageFromCSV)
+testRunner.testCase.setPropertyValue("Department",departmentFromCSV)
+testRunner.testCase.setPropertyValue("id",idFromCSV)
+
+//testRunner.testCase.setPropertyValue( "employeeName" , modifiedString[0])
+		
+    		def addTestStep=testRunner.testCase.testSteps["addEmployee-TestStep"]
+
+		def contextAddEmployee=new WsdlTestRunContext(addTestStep);
+
+		addTestStep.run(testRunner,contextAddEmployee)
+
+		log.info "This is response string"+testRunner.testCase.testSteps["addEmployee-TestStep"].getPropertyValue("Response")
+ } 
+
+   /*
+File output = new File(TEST_OUTPUT_FILE_NAME)
+	if (output.exists())
+	{
+	    output.delete()
+	}
+	output.createNewFile()
+	output.withWriter { writer ->
+	    new CSVWriter(writer).writeAll(rows)
+	
+	}
+*/</script></con:config></con:testStep><con:testStep type="properties" name="Properties" id="f9b9c320-39ca-4ea1-bdc3-33cf70727b1b"><con:settings/><con:config xsi:type="con:PropertiesStep" saveFirst="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:properties/></con:config></con:testStep><con:properties><con:property><con:name>name</con:name><con:value>Kiran</con:value></con:property><con:property><con:name>age</con:name><con:value>44</con:value></con:property><con:property><con:name>Department</con:name><con:value>Development</con:value></con:property><con:property><con:name>id</con:name><con:value>5535</con:value></con:property></con:properties><con:reportParameters/></con:testCase>

@@ -1,0 +1,208 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<con:testCase id="6d03bfae-6362-4f22-b9e8-8480f490812d" failOnError="true" failTestCaseOnErrors="true" keepSession="false" maxResults="0" name="JDBCTestCase" searchProperties="true" xmlns:con="http://eviware.com/soapui/config"><con:settings><con:setting id="6d03bfae-6362-4f22-b9e8-8480f490812dfileName">JDBCTestCase</con:setting></con:settings><con:testStep type="groovy" name="Groovy Script2" id="36e4b5e0-cbbc-428f-8f16-27dbd7f66004"><con:settings/><con:config><script/></con:config></con:testStep><con:testStep type="jdbc" name="JDBC Request" id="07abf35c-d76b-413d-a49a-4bd25c4f4b2a"><con:settings><con:setting id="prettyPrintResponse">true</con:setting></con:settings><con:config xsi:type="con:JdbcRequestTestStep" convertColumnNamesToUpperCase="true" queryTimeout="" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:driver>com.mysql.jdbc.Driver</con:driver><con:connectionString>jdbc:mysql://localhost:3306/Employeeportal?user=aparna&amp;password=aparna</con:connectionString><con:connectionProperties/><con:query>select * from ${#TestCase#tableName};</con:query><con:properties/></con:config></con:testStep><con:testStep type="request" name="getEmployeeTestStep" id="bfc207e4-fcf6-4a28-abcd-d13e383370c4"><con:settings/><con:config xsi:type="con:RequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:interface>EmployeeManagementServiceSoap12Binding</con:interface><con:operation>getEmployeeDetails</con:operation><con:request name="getEmployeeTestStep" id="75c2347b-c9e3-4724-b198-43f70cb23b29"><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting></con:settings><con:encoding>UTF-8</con:encoding><con:endpoint>http://localhost:8080/axis2/services/EmployeeManagementService.EmployeeManagementServiceHttpSoap12Endpoint/</con:endpoint><con:request><![CDATA[<soap:Envelope xmlns:soap="http://www.w3.org/2003/05/soap-envelope" xmlns:typ="http://sample.com/reservation/guest/types">\r
+   <soap:Header/>\r
+   <soap:Body>\r
+      <typ:getEmployeeDetails>\r
+         <!--Optional:-->\r
+         <typ:employeeName>${#TestCase#employeeName}</typ:employeeName>\r
+      </typ:getEmployeeDetails>\r
+   </soap:Body>\r
+</soap:Envelope>]]></con:request><con:assertion type="SOAP Response" id="74ad4516-baff-46f0-8569-67edd3a1720b"/><con:assertion type="Schema Compliance" id="a6854e27-7447-48b1-aaba-d95d64c0037e"><con:configuration/></con:assertion><con:assertion type="SOAP Fault Assertion" id="64ed77a6-d5dd-4a9c-9338-f0a072d492f5"/><con:credentials><con:selectedAuthProfile>No Authorization</con:selectedAuthProfile><con:authType>No Authorization</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:wsaConfig mustUnderstand="NONE" version="200508"/><con:wsrmConfig version="1.2"/></con:request></con:config></con:testStep><con:testStep type="groovy" name="Groovy Script" id="f45cf4e7-cef8-4743-95e3-e33869821f9d" disabled="true"><con:settings/><con:config><script><![CDATA[/**
+* Below is the Script Assertion for the JDBC Request test step
+* extracts column names and values for a single row (assuming query retuns a single row)
+* and put the extracted data into following Properties test step
+* Refer for more details
+* https://community.smartbear.com/t5/forums/replypage/board-id/SoapUING_forum/message-id/40377
+** /
+//For testing, using fixed response
+//Comment it and uncomment  line 19 when you need the script to process current jdbc test step response
+def jdbcResponse = """<Results>
+   <ResultSet fetchSize="0">
+      <Row rowNumber="1">
+         <CATEGORY.CAT_ID>7</CATEGORY.CAT_ID>
+         <CATEGORY.CAT_NAME>Human Resource</CATEGORY.CAT_NAME>
+      </Row>
+      </ResultSet>
+</Results>"""
+//def jdbcResponse = context.response
+def xml = new XmlSlurper().parseText(jdbcResponse)
+//Modify the test step name if different from Properties
+def step = context.testCase.testSteps['Properties']
+//Clean up properties from previous run
+step.propertyNames?.each { step.removeProperty(it) }
+//Find Row element; Get its children i.e., columns and values and add them as properties to Properties step 
+xml.'**'.find{it.name() == 'Row'}.childNodes().each { 
+	def prop = step.hasProperty(it.name()) ? step.getProperty(it.name()) : step.addProperty(it.name())
+	prop.value = it.text()
+}
+log.info "Check the properties step for the details"]]></script></con:config></con:testStep><con:testStep type="groovy" name="Groovy Script3" id="7c20b119-7818-4a63-83a4-cd23cd442e03"><con:settings/><con:config><script>import groovy.sql.Sql 
+import com.eviware.soapui.support.GroovyUtils
+import com.eviware.soapui.impl.wsdl.testcase.WsdlTestRunContext
+import java.util.*
+import com.eviware.soapui.support.XmlHolder
+
+def personlist = []
+    sql = Sql.newInstance("jdbc:mysql://localhost:3306/Employeeportal?user=aparna&amp;password=aparna", "com.mysql.jdbc.Driver")
+    query = "select name from employeeinfo"
+    sql.eachRow(query)
+    {
+       row-> personlist &lt;&lt; row.toString()
+    }
+    sql.close()
+
+    log.info personlist.each{println it}  // you can also return the list
+
+   for(int i = 0;i&lt;personlist.size();i++) 
+   {
+          println(i);
+    		log.info personlist[i]
+    
+   
+    		def user_id = personlist[i].toString()
+    		
+		log.info "This is retrieved valuee"+personlist[i]
+		def arr = user_id.tokenize(':')
+		log.info "This is arrae"+arr[1]
+		def modifiedString = arr[1].tokenize(']')
+		log.info "This is arrae"+modifiedString[0]
+		//def user_idNew=arr[1]
+
+		//def newAddXml = getEmployeeTestStep.getXml();
+		
+		
+		testRunner.testCase.setPropertyValue( "employeeName" , modifiedString[0])
+		
+    		def addTestStep=testRunner.testCase.testSteps["getEmployeeTestStep"]
+
+		def contextAddEmployee=new WsdlTestRunContext(addTestStep);
+
+		addTestStep.run(testRunner,contextAddEmployee)
+
+		log.info "This is response string"+testRunner.testCase.testSteps["getEmployeeTestStep"].getPropertyValue("Response")
+   
+    }
+
+
+    </script></con:config></con:testStep><con:testStep type="groovy" name="Groovy Script_UsingListApproach" id="8d8b0c36-dcdc-4711-9c46-c3c363c31deb"><con:settings/><con:config><script>import groovy.sql.Sql 
+import com.eviware.soapui.support.GroovyUtils
+import com.eviware.soapui.impl.wsdl.testcase.WsdlTestRunContext
+import java.util.*
+import com.eviware.soapui.support.XmlHolder
+
+def personlist = []
+    sql = Sql.newInstance("jdbc:mysql://localhost:3306/Employeeportal?user=aparna&amp;password=aparna", "com.mysql.jdbc.Driver")
+    query = "select name from employeeinfo"
+   
+       personlist = sql.rows('select name from employeeinfo')
+       log.info personlist
+       for(int i=0;i&lt;personlist.size();i++)
+       {
+
+       	log.info personlist[i].name
+       	testRunner.testCase.setPropertyValue( "employeeName" ,personlist[i].name)
+		
+    		def addTestStep=testRunner.testCase.testSteps["getEmployeeTestStep"]
+
+		def contextAddEmployee=new WsdlTestRunContext(addTestStep);
+
+		addTestStep.run(testRunner,contextAddEmployee)
+
+		log.info "This is response string"+testRunner.testCase.testSteps["getEmployeeTestStep"].getPropertyValue("Response")
+       }
+    
+    sql.close()
+
+ </script></con:config></con:testStep><con:testStep type="groovy" name="Groovy Script_MapApproach" id="0908c3ef-8d5f-440e-af65-61ae4d6be191"><con:settings/><con:config><script>import java.util.*
+import groovy.sql.Sql 
+import com.eviware.soapui.support.GroovyUtils
+import com.eviware.soapui.impl.wsdl.testcase.WsdlTestRunContext
+import com.eviware.soapui.support.XmlHolder
+
+
+def personlist = [:]
+    sql = Sql.newInstance("jdbc:mysql://localhost:3306/Employeeportal?user=aparna&amp;password=aparna", "com.mysql.jdbc.Driver")
+    //query = "select name from employeeinfo"
+
+	personlist = sql.rows('select name from employeeinfo')
+	for(int i=0;i&lt;personlist.size();i++)
+	{
+	def person = personlist["name"][i]
+	
+	log.info person
+
+	testRunner.testCase.setPropertyValue( "employeeName" ,person)
+		
+    		def addTestStep=testRunner.testCase.testSteps["getEmployeeTestStep"]
+
+		def contextAddEmployee=new WsdlTestRunContext(addTestStep);
+
+		addTestStep.run(testRunner,contextAddEmployee)
+	}
+
+	</script></con:config></con:testStep><con:testStep type="groovy" name="ValidatingAPIResponseWithDB" id="cdb3451d-cde2-425d-87bb-518296f3aae2"><con:settings/><con:config><script>import java.util.*
+import groovy.sql.Sql 
+import com.eviware.soapui.support.GroovyUtils
+import com.eviware.soapui.impl.wsdl.testcase.WsdlTestRunContext
+import com.eviware.soapui.support.XmlHolder
+
+
+
+def personlist = [:]
+    sql = Sql.newInstance("jdbc:mysql://localhost:3306/Employeeportal?user=aparna&amp;password=aparna", "com.mysql.jdbc.Driver")
+    //query = "select name from employeeinfo"
+
+	personlist = sql.rows('select * from employeeinfo')
+	log.info "This is all data in table"+personlist
+	for(int i=0;i&lt;personlist.size();i++)
+	{
+	def personName = personlist["name"][i]
+	def personId = personlist["id"][i]
+	def personDept = personlist["dept"][i]
+	log.info "This is personDept"+personDept
+	def personAge = personlist["age"][i]
+
+	int idConv=personId.toInteger()
+	log.info "This is idConv"+idConv
+	int ageConv=personAge.toInteger()
+	log.info "This is ageConv"+ageConv
+
+	testRunner.testCase.setPropertyValue( "employeeName" ,personName)
+		
+    		def addTestStep=testRunner.testCase.testSteps["getEmployeeTestStep"]
+
+		def contextAddEmployee=new WsdlTestRunContext(addTestStep);
+
+		addTestStep.run(testRunner,contextAddEmployee)
+
+		def getResponse=testRunner.testCase.testSteps["getEmployeeTestStep"].getPropertyValue("Response")
+		log.info getResponse
+		
+		def addEmpDetails= new XmlHolder(getResponse)
+
+		def responseName=addEmpDetails.getNodeValue("//*:name")
+		def responseId=addEmpDetails.getNodeValue("//*:id")
+		def responseDept=addEmpDetails.getNodeValue("//*:department")
+		def responseAge=addEmpDetails.getNodeValue("//*:age")
+
+		int resIdConv=responseId.toInteger()
+		int resAgeConv=responseAge.toInteger()
+		assert responseName==personName
+		assert resIdConv==idConv
+		assert responseDept==responseDept
+		assert resAgeConv==ageConv
+
+
+		log.info "all passed"
+		/*
+		if(responseName==person)
+		{
+			log.info "passed"
+		}
+		else
+		
+			log.info "failed"
+		
+		*/
+	}
+
+	</script></con:config></con:testStep><con:properties><con:property><con:name>tableName</con:name><con:value>employeeinfo</con:value></con:property><con:property><con:name>employeeName</con:name><con:value>XML root2</con:value></con:property><con:property><con:name>id</con:name><con:value/></con:property></con:properties><con:reportParameters/></con:testCase>

@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<con:testCase id="9b23d41d-de76-48bd-a0a4-4a2504fccb7b" failOnError="true" failTestCaseOnErrors="true" keepSession="false" maxResults="0" name="XMLSchemaValidation-TestCase" searchProperties="true" xmlns:con="http://eviware.com/soapui/config"><con:settings><con:setting id="9b23d41d-de76-48bd-a0a4-4a2504fccb7bfileName">XMLSchemaValidation-TestCase</con:setting></con:settings><con:testStep type="request" name="getEmployee-TestStep" id="86913398-e84e-4bdc-b024-72346706b69d"><con:settings/><con:config xsi:type="con:RequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:interface>EmployeeManagementServiceSoap12Binding</con:interface><con:operation>getEmployeeDetails</con:operation><con:request name="getEmployee-TestStep" id="2a52ccea-ef57-4fb9-bb4b-486ddd94ff64"><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting></con:settings><con:encoding>UTF-8</con:encoding><con:endpoint>http://localhost:8080/axis2/services/EmployeeManagementService.EmployeeManagementServiceHttpSoap12Endpoint/</con:endpoint><con:request><![CDATA[<soap:Envelope xmlns:soap="http://www.w3.org/2003/05/soap-envelope" xmlns:typ="http://sample.com/reservation/guest/types">\r
+   <soap:Header/>\r
+   <soap:Body>\r
+      <typ:getEmployeeDetails>\r
+         <!--Optional:-->\r
+         <typ:employeeName>Ramu</typ:employeeName>\r
+      </typ:getEmployeeDetails>\r
+   </soap:Body>\r
+</soap:Envelope>]]></con:request><con:assertion type="SOAP Response" id="34a78d89-e64b-458b-90da-90adf28c17ad"/><con:assertion type="Schema Compliance" id="b62b2f75-9a02-414f-af00-915ac665f99f"><con:configuration/></con:assertion><con:assertion type="SOAP Fault Assertion" id="7bb20d12-eacd-4041-a46b-7fc2816281e7"/><con:credentials><con:selectedAuthProfile>No Authorization</con:selectedAuthProfile><con:authType>No Authorization</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:wsaConfig mustUnderstand="NONE" version="200508"/><con:wsrmConfig version="1.2"/></con:request></con:config></con:testStep><con:testStep type="groovy" name="XMLSchmaValidation" id="011985dc-2939-4140-bc10-0175f18c36b4"><con:settings/><con:config><script>
+import javax.xml.transform.stream.StreamSource
+import javax.xml.validation.SchemaFactory
+import javax.xml.XMLConstants
+import java.io.IOException
+import java.io.File
+
+//Read your xsd file and get the conten into a variable like below.
+def xsdContent = "F:\\SoapUI\\TestData\\getEmployee.xsd";
+
+//Take the response into another variable that you have to validate.
+def actualXMLResponse = context.expand('${getEmployee-TestStep#Response}')
+
+log.info actualXMLResponse
+//create a SchemaFactory object
+def factory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
+
+//Create a given schema object with help of factory
+def schema = factory.newSchema(new StreamSource(new StringReader(xsdContent ));
+
+//Create a validator
+def validator = schema.newValidator();
+  
+//now validate the actual response against the given schema
+
+try
+{
+  validator.validate(new StreamSource(new StringReader(actualXMLResponse )));
+
+} catch(Exception  e) {
+  	log.info (e);
+    assert false;
+}</script></con:config></con:testStep><con:testStep type="groovy" name="Groovy Script2" id="19baf00a-b52f-4823-9152-8cb9f9729598"><con:settings/><con:config><script>
+import javax.xml.XMLConstants
+import javax.xml.transform.stream.StreamSource
+import javax.xml.validation.SchemaFactory
+
+//String response = messageExchange.responseContent
+def actualXMLResponse = context.expand('${getEmployee-TestStep#Response}')
+log.info actualXMLResponse
+
+new File('F:\\SoapUI\\TestData\\getEmployee.xsd').withReader
+{ xsd ->
+SchemaFactory.newInstance( XMLConstants.W3C_XML_SCHEMA_NS_URI )
+.newSchema( new StreamSource( xsd ) )
+.newValidator()
+.validate( new StreamSource( new StringReader( actualXMLResponse ) ) )
+
+}
+</script></con:config></con:testStep><con:properties/><con:reportParameters/></con:testCase>

@@ -1,0 +1,12 @@
+addEmployee.xml
+getEmployee.xml
+Script.xml
+addEmployeeFromXML.xml
+getEmployeeFromCSV.xml
+E2ECases.xml
+ImportJarFile.xml
+GetEmployeeSchemaTestCase.xml
+JDBCTestCase.xml
+ReadingDataFromExcel.xml
+ReadingDataFromCSVandSendtoAddEmployeeRequest-TestCase.xml
+XMLSchemaValidation-TestCase.xml

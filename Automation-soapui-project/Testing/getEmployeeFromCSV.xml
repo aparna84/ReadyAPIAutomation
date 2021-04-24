@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<con:testCase id="7ee5354f-efc6-4400-ba29-b8278247ba0a" failOnError="true" failTestCaseOnErrors="true" keepSession="false" maxResults="0" name="getEmployeeFromCSV" searchProperties="true" xmlns:con="http://eviware.com/soapui/config"><con:settings><con:setting id="7ee5354f-efc6-4400-ba29-b8278247ba0afileName">getEmployeeFromCSV</con:setting></con:settings><con:testStep type="properties" name="Properties" id="ed436fad-db9d-4e70-abea-4d494a2edb9a"><con:settings/><con:config xsi:type="con:PropertiesStep" saveFirst="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:properties><con:property><con:name>name</con:name><con:value>Ramu four</con:value></con:property><con:property><con:name>employeeName</con:name><con:value>Ramu four</con:value></con:property></con:properties></con:config></con:testStep><con:testStep type="request" name="getEmp" id="c71b8321-8868-4292-9409-cfeb39d4e656"><con:settings/><con:config xsi:type="con:RequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:interface>EmployeeManagementServiceSoap12Binding</con:interface><con:operation>getEmployeeDetails</con:operation><con:request name="getEmp" id="8f462fd1-76c5-44fe-92b7-62d871af543a"><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting></con:settings><con:encoding>UTF-8</con:encoding><con:endpoint>http://localhost:8080/axis2/services/EmployeeManagementService.EmployeeManagementServiceHttpSoap12Endpoint/</con:endpoint><con:request><![CDATA[<soap:Envelope xmlns:soap="http://www.w3.org/2003/05/soap-envelope" xmlns:typ="http://sample.com/reservation/guest/types">\r
+   <soap:Header/>\r
+   <soap:Body>\r
+      <typ:getEmployeeDetails>\r
+         <!--Optional:-->\r
+         <typ:employeeName>${Properties#name}</typ:employeeName>\r
+      </typ:getEmployeeDetails>\r
+   </soap:Body>\r
+</soap:Envelope>]]></con:request><con:assertion type="SOAP Response" id="716e3182-d4f1-4329-bb66-2ade87d594d6"/><con:assertion type="Schema Compliance" id="d8956e20-dcaf-47c3-8bba-a2a4b44910bb"><con:configuration/></con:assertion><con:assertion type="SOAP Fault Assertion" id="023a07d8-3e13-4662-9c84-54aea341a004"/><con:credentials><con:selectedAuthProfile>No Authorization</con:selectedAuthProfile><con:authType>No Authorization</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:wsaConfig mustUnderstand="NONE" version="200508"/><con:wsrmConfig version="1.2"/></con:request></con:config></con:testStep><con:testStep type="groovy" name="Groovy Script" id="83380e71-59c4-4a6c-bb15-38d5d232ad77"><con:settings/><con:config><script>def groovyUtils = new com.eviware.soapui.support.GroovyUtils(context)
+
+//get the csv test file with 
+def csvFilePath = "F:\\SoapUI\\TestData\\EmpData.csv"
+context.fileReader = new BufferedReader(new FileReader(csvFilePath))
+
+//parse the csv file line by line
+rowsData = context.fileReader.readLines()
+int rowsize = rowsData.size()
+for(int i = 1;  i &lt; rowsize;  i++)
+{
+
+    rowdata = rowsData[i]
+    log.info rowdata
+    String[] data = rowdata.split(",")
+
+    //get the values from records
+    def value_from_first_column = data[0]	
+    log.info "first column ->"+value_from_first_column
+    //def value_from_second_column = data[1]
+    //def value_from_third_column = data[2]
+
+//def addRequest=testRunner.testCase.testSuite.testCases["getEmployeeFromCSV"].testSteps["getEmp"].getPropertyValue("Request")
+//testRunner.testCase.setPropertyValue.setPropertyValue("Username",value_from_first_column)
+testRunner.testCase.getTestStepByName("Properties").setPropertyValue("name",value_from_first_column)
+testRunner.testCase.getTestStepByName("Properties").setPropertyValue("employeeName",value_from_first_column)
+//log.info "after execution ->"+ testRunner.testCase.testSuite.testCases["getEmployeeFromCSV"].testSteps["getEmp"].getPropertyValue("Request")
+
+// EXECUTE REQUEST FOR EACH VALUE IN CSV
+   testRunner.runTestStepByName("getEmp")  
+   //timeout between iterations
+   sleep(500)
+}</script></con:config></con:testStep><con:testStep type="groovy" name="Groovy Script for Delimiter" id="bfc785ab-0f0c-4e17-837e-a317ca50e99f"><con:settings/><con:config><script>/*
+def groovyUtils = new com.eviware.soapui.support.GroovyUtils(context)
+
+//get the csv test file with 
+def csvFilePath = "F:\\SoapUI\\TestData\\EmpData.csv"
+context.fileReader = new BufferedReader(new FileReader(csvFilePath))
+
+//parse the csv file line by line
+rowsData = context.fileReader.readLines()
+int rowsize = rowsData.size()
+for(int i = 1;  i &lt; rowsize;  i++)
+{
+
+    rowdata = rowsData[i]
+    log.info rowdata
+    String[] data = rowdata.split(",")
+    log.info "after split data-->"+data
+
+    //get the values from records
+    def value_from_first_column = data[0]	
+    log.info "first column ->"+value_from_first_column
+    //def value_from_second_column = data[1]
+    //def value_from_third_column = data[2]
+
+//def addRequest=testRunner.testCase.testSuite.testCases["getEmployeeFromCSV"].testSteps["getEmp"].getPropertyValue("Request")
+//testRunner.testCase.setPropertyValue.setPropertyValue("Username",value_from_first_column)
+testRunner.testCase.getTestStepByName("Properties").setPropertyValue("name",value_from_first_column)
+testRunner.testCase.getTestStepByName("Properties").setPropertyValue("employeeName",value_from_first_column)
+//log.info "after execution ->"+ testRunner.testCase.testSuite.testCases["getEmployeeFromCSV"].testSteps["getEmp"].getPropertyValue("Request")
+
+// EXECUTE REQUEST FOR EACH VALUE IN CSV
+   testRunner.runTestStepByName("getEmp")  
+   //timeout between iterations
+   sleep(500)
+}
+
+*/
+/*
+ @Grab(group='org.apache.commons', module='commons-csv', version='1.2')
+import org.apache.commons.csv.CSVFormat
+import com.opencsv.CSVReader
+import com.opencsv.*
+
+def reader = new CSVReader(new FileReader(new File("F:\\SoapUI\\TestData\\EmpData2.csv")))
+def output = reader.collect { it[0].split('|') }.with { rows ->
+    def header = rows.head()
+    log.info "This is header info"+header
+    def dataRows = rows.tail()
+	log.info "This is dataRows info"+dataRows
+    dataRows.collect { row ->
+        [header, row].transpose().collectEntries()
+    }
+}
+*/
+
+@Grab(group = 'net.sf.opencsv', module = 'opencsv', version = '2.3')
+import au.com.bytecode.opencsv.CSVReader
+import au.com.bytecode.opencsv.CSVParser
+import au.com.bytecode.opencsv.CSVWriter
+
+def TEST_FILE_NAME = 'F:\\SoapUI\\TestData\\EmpData2.csv'
+def TEST_OUTPUT_FILE_NAME = 'F:\\SoapUI\\TestData\\EmpDataOutput.csv'
+
+List&lt;String[]> rows = new CSVReader(new FileReader(new File(TEST_FILE_NAME)), CSVParser.DEFAULT_SEPARATOR, CSVParser.DEFAULT_ESCAPE_CHARACTER, CSVParser.DEFAULT_QUOTE_CHARACTER, 1).readAll()
+log.info "This is row data"+rows
+
+
+def rowsOver100 = rows.collect  {it.findAll()}
+
+
+ def sampleStr = "Simple|3456";
+ ArrayList samArray = sampleStr.split("\\|")
+ log.info "sample Array is ->"+samArray
+ log.info "one obj "+samArray[0]
+
+log.info "all ->"+ rowsOver100
+log.info "single obj ->"+rowsOver100[0][0]
+ArrayList list = rowsOver100[0][0].split("\\|")
+log.info "list first ->"+list[0]
+log.info "list second ->"+list[1]
+
+
+  
+		
+File output = new File(TEST_OUTPUT_FILE_NAME)
+if (output.exists())
+{
+    output.delete()
+}
+output.createNewFile()
+output.withWriter { writer ->
+    new CSVWriter(writer).writeAll(rowsOver100)
+
+}
+//println rows
+</script></con:config></con:testStep><con:testStep type="groovy" name="Groovy Script for Delimiter2" id="47344a26-9a44-47d0-b903-04b52eb22cd9"><con:settings/><con:config><script>@Grab(group = 'net.sf.opencsv', module = 'opencsv', version = '2.3')
+import au.com.bytecode.opencsv.CSVReader
+import au.com.bytecode.opencsv.CSVParser
+import au.com.bytecode.opencsv.CSVWriter
+
+def TEST_FILE_NAME = 'F:\\SoapUI\\TestData\\EmpData2.csv'
+def TEST_OUTPUT_FILE_NAME = 'F:\\SoapUI\\TestData\\EmpDataOutput.csv'
+
+List&lt;String[]> rows = new CSVReader(new FileReader(new File(TEST_FILE_NAME)), CSVParser.DEFAULT_SEPARATOR, CSVParser.DEFAULT_ESCAPE_CHARACTER, CSVParser.DEFAULT_QUOTE_CHARACTER, 1).readAll()
+log.info "This is row data"+rows
+
+	log.info "single obj ->"+rows[0][0]
+	log.info "single obj ->"+rows[1][0]
+	log.info "single obj ->"+rows[2][0]
+	log.info "single obj ->"+rows[3][0]
+	for(int i=0;i&lt;rows.size();i++)
+	{
+
+			log.info "This is i loop"+i
+
+			ArrayList list = rows[i][0].split("\\|")
+			log.info "list first ->"+list[0]
+			log.info "list second ->"+list[1]
+			log.info "list second ->"+list[2]
+			log.info "list second ->"+list[3]
+
+	
+	
+	}
+	
+File output = new File(TEST_OUTPUT_FILE_NAME)
+	if (output.exists())
+	{
+	    output.delete()
+	}
+	output.createNewFile()
+	output.withWriter { writer ->
+	    new CSVWriter(writer).writeAll(rows)
+	
+	}
+</script></con:config></con:testStep><con:properties/><con:reportParameters/></con:testCase>

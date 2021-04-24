@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<con:testCase id="d1d0b41f-eeff-446d-9de2-cb53022df2b7" failOnError="true" failTestCaseOnErrors="true" keepSession="false" maxResults="0" name="GetEmployeeSchemaTestCase" searchProperties="true" xmlns:con="http://eviware.com/soapui/config"><con:settings><con:setting id="d1d0b41f-eeff-446d-9de2-cb53022df2b7fileName">GetEmployeeSchemaTestCase</con:setting></con:settings><con:testStep type="request" name="getEmployeeTestCase" id="1610b20f-4318-4e50-94b7-4c353e48865a"><con:settings/><con:config xsi:type="con:RequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:interface>EmployeeManagementServiceSoap12Binding</con:interface><con:operation>getEmployeeDetails</con:operation><con:request name="getEmployeeTestCase" id="98454527-2af9-4bb6-a42a-df6268896cfa"><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting></con:settings><con:encoding>UTF-8</con:encoding><con:endpoint>http://localhost:8080/axis2/services/EmployeeManagementService.EmployeeManagementServiceHttpSoap12Endpoint/</con:endpoint><con:request><![CDATA[<soap:Envelope xmlns:soap="http://www.w3.org/2003/05/soap-envelope" xmlns:typ="http://sample.com/reservation/guest/types">\r
+   <soap:Header/>\r
+   <soap:Body>\r
+      <typ:getEmployeeDetails>\r
+         <!--Optional:-->\r
+         <typ:employeeName>Dimpu one</typ:employeeName>\r
+      </typ:getEmployeeDetails>\r
+   </soap:Body>\r
+</soap:Envelope>]]></con:request><con:assertion type="SOAP Response" id="4d6adcd4-97a6-4960-925f-f8e80f00b753"/><con:assertion type="Schema Compliance" id="962e846c-f43a-4196-96f8-1f1039f1568c"><con:configuration/></con:assertion><con:assertion type="SOAP Fault Assertion" id="42fb8401-c261-4fbc-a062-e226f94134e3"/><con:assertion type="GroovyScriptAssertion" id="43e796b0-b496-4353-ab70-73301c875aaf" name="Script Assertion"><con:configuration><scriptText>import javax.xml.XMLConstants
+import javax.xml.transform.stream.StreamSource
+import javax.xml.validation.SchemaFactory
+import com.eviware.soapui.support.XmlHolder
+
+// Specify an XSD Schema
+def xsdFilePath = "F:\\SoapUI\\Schema\\GetEmployeeSchema.xsd"
+
+
+
+// Get the response as XML
+//def holder = new XmlHolder( messageExchange.responseContentAsXml )
+
+def response = messageExchange.getResponse().contentAsXml
+
+
+
+
+// Create validation objects
+def factory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI)
+def schema = factory.newSchema(new StreamSource(xsdFilePath))
+def validator = schema.newValidator()
+
+// Validate the response against the schema
+assert validator.validate(new StreamSource(new StringReader(response))) == null</scriptText></con:configuration></con:assertion><con:credentials><con:selectedAuthProfile>No Authorization</con:selectedAuthProfile><con:authType>No Authorization</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:wsaConfig mustUnderstand="NONE" version="200508"/><con:wsrmConfig version="1.2"/></con:request></con:config></con:testStep><con:testStep type="groovy" name="Groovy Script" id="267c6f6f-5e69-40a6-8cc3-c7762b8bb0d6"><con:settings/><con:config><script>import javax.xml.XMLConstants
+import javax.xml.transform.stream.StreamSource
+import javax.xml.validation.SchemaFactory
+import com.eviware.soapui.support.XmlHolder
+
+// Specify an XSD Schema
+def xsdFilePath = "F:\\SoapUI\\Schema\\GetEmployeeSchema.xsd"
+
+
+
+// Get the response as XML
+//def holder = new XmlHolder( messageExchange.responseContentAsXml )
+
+def response = messageExchange.getResponse().contentAsXml
+
+
+
+
+// Create validation objects
+def factory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI)
+def schema = factory.newSchema(new StreamSource(xsdFilePath))
+def validator = schema.newValidator()
+
+// Validate the response against the schema
+assert validator.validate(new StreamSource(new StringReader(response))) == null</script></con:config></con:testStep><con:properties/><con:reportParameters/></con:testCase>
