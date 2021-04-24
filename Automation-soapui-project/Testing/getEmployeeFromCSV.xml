@@ -10,6 +10,7 @@
 </soap:Envelope>]]></con:request><con:assertion type="SOAP Response" id="716e3182-d4f1-4329-bb66-2ade87d594d6"/><con:assertion type="Schema Compliance" id="d8956e20-dcaf-47c3-8bba-a2a4b44910bb"><con:configuration/></con:assertion><con:assertion type="SOAP Fault Assertion" id="023a07d8-3e13-4662-9c84-54aea341a004"/><con:credentials><con:selectedAuthProfile>No Authorization</con:selectedAuthProfile><con:authType>No Authorization</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:wsaConfig mustUnderstand="NONE" version="200508"/><con:wsrmConfig version="1.2"/></con:request></con:config></con:testStep><con:testStep type="groovy" name="Groovy Script" id="83380e71-59c4-4a6c-bb15-38d5d232ad77"><con:settings/><con:config><script>def groovyUtils = new com.eviware.soapui.support.GroovyUtils(context)
 
 //get the csv test file with 
+	// This comment is from GITHUB
 def csvFilePath = "F:\\SoapUI\\TestData\\EmpData.csv"
 context.fileReader = new BufferedReader(new FileReader(csvFilePath))
 
