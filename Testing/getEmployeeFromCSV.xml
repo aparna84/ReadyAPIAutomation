@@ -40,7 +40,7 @@ testRunner.testCase.getTestStepByName("Properties").setPropertyValue("employeeNa
    //timeout between iterations
    sleep(500)
 }
-//This is newly added comments</script></con:config></con:testStep><con:testStep type="groovy" name="Groovy Script for Delimiter" id="bfc785ab-0f0c-4e17-837e-a317ca50e99f"><con:settings/><con:config><script>/*
+</script></con:config></con:testStep><con:testStep type="groovy" name="Groovy Script for Delimiter" id="bfc785ab-0f0c-4e17-837e-a317ca50e99f"><con:settings/><con:config><script>/*
 def groovyUtils = new com.eviware.soapui.support.GroovyUtils(context)
 
 //get the csv test file with 
